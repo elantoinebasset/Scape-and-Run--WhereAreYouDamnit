@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class CommandFindParasite extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args)
     {
-        // Si aucun argument fourni, on affiche l'aide
+        // If there is no arguments, here a little bit of help for the players
         if (args.length == 0)
         {
             sender.sendMessage(new TextComponentString("\u00A7cUsage : /findparasite <beckon|dispatcher>"));
@@ -52,18 +52,18 @@ public class CommandFindParasite extends CommandBase
         }
 
         String argument = args[0].toLowerCase();
-        List<String> idsAChercher;
-        String nomAffiche;
+        List<String> IdsToSearch;
+        String NameOfTheEntity;
 
         if (argument.equals("beckon"))
         {
-            idsAChercher = IDS_BECKONS;
-            nomAffiche = "Beckon";
+            IdsToSearch = IDS_BECKONS;
+            NameOfTheEntity = "Beckon";
         }
         else if (argument.equals("dispatcher"))
         {
-            idsAChercher = IDS_DISPATCHERS;
-            nomAffiche = "Dispatcher";
+            IdsToSearch = IDS_DISPATCHERS;
+            NameOfTheEntity = "Dispatcher";
         }
         else
         {
@@ -71,36 +71,55 @@ public class CommandFindParasite extends CommandBase
             return;
         }
 
-        World monde = server.getEntityWorld();
-        List<Entity> toutesLesEntites = monde.loadedEntityList;
-        int nombreTrouve = 0;
+        World world = server.getEntityWorld();
+        List<Entity> AllEntitys = world.loadedEntityList;
+        BlockPos positionPlayer = sender.getPosition();
 
-        for (Entity entite : toutesLesEntites)
+        // To store the results in a list of int arrays, where each array contains [x, y, z, distance]
+        List<int[]> results = new ArrayList<>();
+
+        for (Entity entity : AllEntitys)
         {
-            ResourceLocation cleEntite = EntityRegistry.getEntry(entite.getClass()) != null
-                ? EntityRegistry.getEntry(entite.getClass()).getRegistryName()
+            ResourceLocation cleentity = EntityRegistry.getEntry(entity.getClass()) != null
+                ? EntityRegistry.getEntry(entity.getClass()).getRegistryName()
                 : null;
 
-            if (cleEntite != null && idsAChercher.contains(cleEntite.toString()))
+            if (cleentity != null && IdsToSearch.contains(cleentity.toString()))
             {
-                BlockPos position = entite.getPosition();
-                sender.sendMessage(new TextComponentString(
-                    "\u00A7e[" + nomAffiche + "] \u00A7f" + cleEntite.getResourcePath() +
-                    " \u00A77-> \u00A7aX:" + position.getX() +
-                    " Y:" + position.getY() +
-                    " Z:" + position.getZ()
-                ));
-                nombreTrouve++;
+                BlockPos positionEntity = entity.getPosition();
+
+                int rangeX = positionEntity.getX() - positionPlayer.getX();
+                int rangeZ = positionEntity.getZ() - positionPlayer.getZ();
+                int rangeY = positionEntity.getY() - positionPlayer.getY();
+                int range = (int) Math.sqrt(rangeX * rangeX + rangeY * rangeY + rangeZ * rangeZ);
+
+                results.add(new int[]{positionEntity.getX(), positionEntity.getY(), positionEntity.getZ(), range});
             }
         }
 
-        if (nombreTrouve == 0)
+        // Sort the results by distance
+        results.sort((a, b) -> Integer.compare(a[3], b[3]));
+
+        // And now i send the results to the player
+        for (int[] result : results)
         {
-            sender.sendMessage(new TextComponentString("\u00A7cNo " + nomAffiche + " found in you world."));
+            sender.sendMessage(new TextComponentString(
+                "\u00A7e[" + NameOfTheEntity + "] " +
+                "\u00A77-> \u00A7aX:" + result[0] +
+                " Y:" + result[1] +
+                " Z:" + result[2] +
+                " \u00A77(\u00A7cYou are " + result[3] + " blocks away\u00A77)"
+            ));
+        }
+
+        if (results.isEmpty())
+        {
+            sender.sendMessage(new TextComponentString("\u00A7cNo " + NameOfTheEntity + " found in your world."));
         }
         else
         {
-            sender.sendMessage(new TextComponentString("\u00A77Total : \u00A7e" + nombreTrouve + " " + nomAffiche + "(s) found."));
+            String accord = results.size() > 1 ? "s" : "";
+            sender.sendMessage(new TextComponentString("\u00A77Total : \u00A7e" + results.size() + " " + NameOfTheEntity + accord + " found."));
         }
     }
 

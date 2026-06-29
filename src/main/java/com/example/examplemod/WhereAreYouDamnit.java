@@ -25,7 +25,7 @@ public class WhereAreYouDamnit
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
-        // On enregistre notre commande au démarrage du serveur
+        // To save the command inside of the game
         event.registerServerCommand(new CommandFindParasite());
     }
 }
