@@ -76,7 +76,7 @@ public class CommandFindParasite extends CommandBase
         BlockPos positionPlayer = sender.getPosition();
 
         // To store the results in a list of int arrays, where each array contains [x, y, z, distance]
-        List<int[]> results = new ArrayList<>();
+        List<EntityResult> results = new ArrayList<>();
 
         for (Entity entity : AllEntitys)
         {
@@ -93,22 +93,22 @@ public class CommandFindParasite extends CommandBase
                 int rangeY = positionEntity.getY() - positionPlayer.getY();
                 int range = (int) Math.sqrt(rangeX * rangeX + rangeY * rangeY + rangeZ * rangeZ);
 
-                results.add(new int[]{positionEntity.getX(), positionEntity.getY(), positionEntity.getZ(), range});
+                results.add(new EntityResult(cleentity.getResourcePath(), positionEntity.getX(), positionEntity.getY(), positionEntity.getZ(), range));
             }
         }
 
         // Sort the results by distance
-        results.sort((a, b) -> Integer.compare(a[3], b[3]));
+        results.sort((a, b) -> Integer.compare(a.range, b.range));
 
         // And now i send the results to the player
-        for (int[] result : results)
+        for (EntityResult result : results)
         {
             sender.sendMessage(new TextComponentString(
-                "\u00A7e[" + NameOfTheEntity + "] " +
-                "\u00A77-> \u00A7aX:" + result[0] +
-                " Y:" + result[1] +
-                " Z:" + result[2] +
-                " \u00A77(\u00A7cYou are " + result[3] + " blocks away\u00A77)"
+                "\u00A7e[" + result.name + "] " +
+                "\u00A77-> \u00A7aX:" + result.x +
+                " Y:" + result.y +
+                " Z:" + result.z +
+                " \u00A77(\u00A7cYou are " + result.range + " blocks away\u00A77)"
             ));
         }
 
@@ -127,5 +127,21 @@ public class CommandFindParasite extends CommandBase
     public int getRequiredPermissionLevel()
     {
         return 0;
+    }
+
+    // Classe interne pour stocker les infos d'une entité trouvée
+    private static class EntityResult
+    {
+        String name;
+        int x, y, z, range;
+
+        EntityResult(String name, int x, int y, int z, int range)
+        {
+            this.name = name;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.range = range;
+        }
     }
 }
