@@ -20,6 +20,8 @@ public class WhereAreYouDamnit
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
+        ModItems.register();
+
     }
 
     @EventHandler

@@ -1,0 +1,11 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "wherearayoudamnit:items/beckon_tracker_idle"
+    },
+    "overrides": [
+        { "predicate": { "wherearayoudamnit:tracker_state": 0 }, "model": "wherearayoudamnit:item/beckon_tracker_idle" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1 }, "model": "wherearayoudamnit:item/beckon_tracker_searching" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2 }, "model": "wherearayoudamnit:item/beckon_tracker_found" }
+    ]
+}

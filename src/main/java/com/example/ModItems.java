@@ -1,3 +1,22 @@
-public class ModItems {
-    
+package com.example.wherearayoudamnit;
+
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+public class ModItems
+{
+    public static Item BECKON_TRACKER;
+    public static Item DISPATCHER_TRACKER;
+
+    public static void register()
+    {
+        // Item to find the Beckons
+        BECKON_TRACKER = new ItemParasiteTracker("beckon_tracker"/* the registryName */, "beckon" /* the type of tracker */);
+        ForgeRegistries.ITEMS.register(BECKON_TRACKER);
+
+        // Item to find the Dispatchers
+        DISPATCHER_TRACKER = new ItemParasiteTracker("dispatcher_tracker"/* the registryName */, "dispatcher" /* the type of tracker */);
+        ForgeRegistries.ITEMS.register(DISPATCHER_TRACKER);
+    }
 }
