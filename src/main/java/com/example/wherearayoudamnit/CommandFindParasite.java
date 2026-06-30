@@ -103,6 +103,20 @@ public class CommandFindParasite extends CommandBase
 
         results.sort((a, b) -> Integer.compare(a.range, b.range));
 
+        new java.util.Timer().schedule(new java.util.TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                server.addScheduledTask(() -> sendResults(sender, results, NameOfTheEntity));
+            }
+        }, 6400);
+
+        return results.size();
+    }
+
+    private void sendResults(ICommandSender sender, List<EntityResult> results, String nameOfTheEntity)
+    {
         for (EntityResult result : results)
         {
             sender.sendMessage(new TextComponentString(
@@ -116,15 +130,13 @@ public class CommandFindParasite extends CommandBase
 
         if (results.isEmpty())
         {
-            sender.sendMessage(new TextComponentString("\u00A7cNo " + NameOfTheEntity + " found in your world."));
+            sender.sendMessage(new TextComponentString("\u00A7cNo " + nameOfTheEntity + " found in your world."));
         }
         else
         {
             String accord = results.size() > 1 ? "s" : "";
-            sender.sendMessage(new TextComponentString("\u00A77Total : \u00A7e" + results.size() + " " + NameOfTheEntity + accord + " found."));
+            sender.sendMessage(new TextComponentString("\u00A77Total : \u00A7e" + results.size() + " " + nameOfTheEntity + accord + " found."));
         }
-
-        return results.size();
     }
 
     @Override

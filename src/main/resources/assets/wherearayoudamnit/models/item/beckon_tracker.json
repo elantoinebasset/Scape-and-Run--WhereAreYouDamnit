@@ -1,7 +1,7 @@
-{
+﻿{
     "parent": "item/handheld",
     "textures": {
-        "layer0": "wherearayoudamnit:items/beckon_tracker_idle"
+        "layer0": "wherearayoudamnit:item/searching/beckon_tracker_searching_0"
     },
     "display": {
         "thirdperson_righthand": {
@@ -21,8 +21,62 @@
         }
     },
     "overrides": [
-        { "predicate": { "wherearayoudamnit:tracker_state": 0 }, "model": "wherearayoudamnit:item/beckon_tracker_idle" },
-        { "predicate": { "wherearayoudamnit:tracker_state": 1 }, "model": "wherearayoudamnit:item/beckon_tracker_searching" },
-        { "predicate": { "wherearayoudamnit:tracker_state": 2 }, "model": "wherearayoudamnit:item/beckon_tracker_found" }
+        { "predicate": { "wherearayoudamnit:tracker_state": 0 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_0" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 0 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_0" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 1 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_1" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 2 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_2" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 3 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_3" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 4 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_4" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 5 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_5" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 6 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_6" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 7 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_7" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 8 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_8" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 9 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_9" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 10 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_10" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 11 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_11" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 12 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_12" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 13 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_13" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 14 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_14" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 15 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_15" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 16 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_16" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 17 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_17" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 18 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_18" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 19 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_19" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 20 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_20" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 21 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_21" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 22 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_22" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 1, "wherearayoudamnit:animation_frame": 23 }, "model": "wherearayoudamnit:item/searching/beckon_tracker_searching_23" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 0 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_0" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 1 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_1" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 2 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_2" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 3 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_3" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 4 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_4" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 5 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_5" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 6 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_6" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 7 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_7" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 8 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_8" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 9 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_9" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 10 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_10" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 11 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_11" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 12 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_12" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 13 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_13" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 14 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_14" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 15 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_15" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 16 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_16" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 17 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_17" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 18 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_18" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 19 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_19" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 20 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_20" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 21 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_21" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 22 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_22" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 23 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_23" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 24 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_24" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 25 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_25" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 26 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_26" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 27 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_27" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 28 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_28" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 29 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_29" },
+        { "predicate": { "wherearayoudamnit:tracker_state": 2, "wherearayoudamnit:animation_frame": 30 }, "model": "wherearayoudamnit:item/found/beckon_tracker_found_30" }
     ]
 }
+

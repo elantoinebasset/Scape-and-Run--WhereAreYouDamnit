@@ -32,6 +32,7 @@ public class ItemParasiteTracker extends Item
         this.setCreativeTab(CreativeTabs.TOOLS);
         this.setMaxStackSize(1);
 
+        // Propriété pour l'état (idle/searching/found)
         this.addPropertyOverride(TRACKER_STATE, new IItemPropertyGetter()
         {
             @Override
@@ -41,6 +42,22 @@ public class ItemParasiteTracker extends Item
                 if (stack.hasTagCompound() && stack.getTagCompound().hasKey("tracker_state"))
                 {
                     return stack.getTagCompound().getInteger("tracker_state");
+                }
+                return 0;
+            }
+        });
+
+        // Propriété pour la frame courante
+        ResourceLocation ANIMATION_FRAME = new ResourceLocation("wherearayoudamnit", "animation_frame");
+        this.addPropertyOverride(ANIMATION_FRAME, new IItemPropertyGetter()
+        {
+            @Override
+            @SideOnly(Side.CLIENT)
+            public float apply(ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)
+            {
+                if (stack.hasTagCompound() && stack.getTagCompound().hasKey("animation_frame"))
+                {
+                    return stack.getTagCompound().getInteger("animation_frame");
                 }
                 return 0;
             }
@@ -62,37 +79,36 @@ public class ItemParasiteTracker extends Item
 
             java.util.Timer timer = new java.util.Timer();
 
-            // After 5 seconds, we go to found state
+            // launch the search after 5 seconds
             timer.schedule(new java.util.TimerTask()
             {
                 @Override
                 public void run()
                 {
-                    setTrackerState(finalItem, 2);
+                    CommandFindParasite command = new CommandFindParasite();
+                    int nombreTrouve = command.executeAndCount(finalPlayer.getServer(), finalPlayer, new String[]{finalType});
 
-                    // After the 4-second, run the command
-                    timer.schedule(new java.util.TimerTask()
+                    if (nombreTrouve > 0)
                     {
-                        @Override
-                        public void run()
+                        setTrackerState(finalItem, 2);
+
+                        timer.schedule(new java.util.TimerTask()
                         {
-                            CommandFindParasite command = new CommandFindParasite();
-                            int nombreTrouve = command.executeAndCount(finalPlayer.getServer(), finalPlayer, new String[]{finalType});
-
-                            if (nombreTrouve > 0)
+                            @Override
+                            public void run()
                             {
                                 setTrackerState(finalItem, 0);
+                                timer.cancel();
                             }
-                            else
-                            {
-                                setTrackerState(finalItem, 0);
-                            }
-
-                            timer.cancel();
-                        }
-                    }, 4000);
+                        }, 6400);
+                    }
+                    else
+                    {
+                        setTrackerState(finalItem, 0);
+                        timer.cancel();
+                    }
                 }
-            }, 5000);
+            }, 2400);
         }
 
         return new ActionResult<>(EnumActionResult.SUCCESS, heldItem);

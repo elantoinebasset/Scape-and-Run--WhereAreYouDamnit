@@ -1,7 +1,7 @@
-{
+﻿{
     "parent": "item/handheld",
     "textures": {
-        "layer0": "wherearayoudamnit:items/beckon/beckon_tracker_idle"
+        "layer0": "wherearayoudamnit:searching/beckon_tracker_searching/beckon_tracker_searching_11"
     },
     "display": {
         "thirdperson_righthand": {
@@ -21,3 +21,4 @@
         }
     }
 }
+
