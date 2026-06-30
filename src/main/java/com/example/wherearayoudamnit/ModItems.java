@@ -12,11 +12,11 @@ public class ModItems
     public static void register()
     {
         // Item to find the Beckons
-        BECKON_TRACKER = new ItemParasiteTracker("beckon_tracker"/* the registryName */, "beckon" /* the type of tracker */);
+        BECKON_TRACKER = new ItemParasiteTracker(WhereAreYouDamnit.MODID, "beckon_tracker", "beckon");
         ForgeRegistries.ITEMS.register(BECKON_TRACKER);
 
         // Item to find the Dispatchers
-        DISPATCHER_TRACKER = new ItemParasiteTracker("dispatcher_tracker"/* the registryName */, "dispatcher" /* the type of tracker */);
+        DISPATCHER_TRACKER = new ItemParasiteTracker(WhereAreYouDamnit.MODID, "dispatcher_tracker", "dispatcher");
         ForgeRegistries.ITEMS.register(DISPATCHER_TRACKER);
     }
 }

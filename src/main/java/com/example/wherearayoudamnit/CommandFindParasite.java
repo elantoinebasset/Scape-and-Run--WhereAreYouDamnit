@@ -44,11 +44,16 @@ public class CommandFindParasite extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args)
     {
-        // If there is no arguments, here a little bit of help for the players
+        executeAndCount(server, sender, args);
+    }
+
+    // This method executes the command and returns the number of entities found. FOR TESTING.
+    public int executeAndCount(MinecraftServer server, ICommandSender sender, String[] args)
+    {
         if (args.length == 0)
         {
             sender.sendMessage(new TextComponentString("\u00A7cUsage : /findparasite <beckon|dispatcher>"));
-            return;
+            return 0;
         }
 
         String argument = args[0].toLowerCase();
@@ -68,14 +73,13 @@ public class CommandFindParasite extends CommandBase
         else
         {
             sender.sendMessage(new TextComponentString("\u00A7cUnknown argument : " + argument + ". Use beckon or dispatcher. Thank you :D"));
-            return;
+            return 0;
         }
 
         World world = server.getEntityWorld();
         List<Entity> AllEntitys = world.loadedEntityList;
         BlockPos positionPlayer = sender.getPosition();
 
-        // To store the results in a list of int arrays, where each array contains [x, y, z, distance]
         List<EntityResult> results = new ArrayList<>();
 
         for (Entity entity : AllEntitys)
@@ -97,10 +101,8 @@ public class CommandFindParasite extends CommandBase
             }
         }
 
-        // Sort the results by distance
         results.sort((a, b) -> Integer.compare(a.range, b.range));
 
-        // And now i send the results to the player
         for (EntityResult result : results)
         {
             sender.sendMessage(new TextComponentString(
@@ -121,6 +123,8 @@ public class CommandFindParasite extends CommandBase
             String accord = results.size() > 1 ? "s" : "";
             sender.sendMessage(new TextComponentString("\u00A77Total : \u00A7e" + results.size() + " " + NameOfTheEntity + accord + " found."));
         }
+
+        return results.size();
     }
 
     @Override
@@ -129,7 +133,6 @@ public class CommandFindParasite extends CommandBase
         return 0;
     }
 
-    // Classe interne pour stocker les infos d'une entité trouvée
     private static class EntityResult
     {
         String name;
