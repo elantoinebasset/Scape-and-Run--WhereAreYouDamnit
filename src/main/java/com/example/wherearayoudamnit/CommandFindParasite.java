@@ -47,6 +47,43 @@ public class CommandFindParasite extends CommandBase
         executeAndCount(server, sender, args);
     }
 
+
+
+
+        public int countOnly(MinecraftServer server, ICommandSender sender, String[] args)
+    {
+        if (args.length == 0) return 0;
+
+        String argument = args[0].toLowerCase();
+        List<String> IdsToSearch;
+
+        if (argument.equals("beckon"))
+            IdsToSearch = IDS_BECKONS;
+        else if (argument.equals("dispatcher"))
+            IdsToSearch = IDS_DISPATCHERS;
+        else
+            return 0;
+
+        World world = server.getEntityWorld();
+        List<Entity> AllEntitys = world.loadedEntityList;
+        int count = 0;
+
+        for (Entity entity : AllEntitys)
+        {
+            ResourceLocation cleentity = EntityRegistry.getEntry(entity.getClass()) != null
+                ? EntityRegistry.getEntry(entity.getClass()).getRegistryName()
+                : null;
+
+            if (cleentity != null && IdsToSearch.contains(cleentity.toString()))
+                count++;
+        }
+
+        return count;
+    }
+
+
+
+
     // This method executes the command and returns the number of entities found. FOR TESTING.
     public int executeAndCount(MinecraftServer server, ICommandSender sender, String[] args)
     {
@@ -103,14 +140,7 @@ public class CommandFindParasite extends CommandBase
 
         results.sort((a, b) -> Integer.compare(a.range, b.range));
 
-        new java.util.Timer().schedule(new java.util.TimerTask()
-        {
-            @Override
-            public void run()
-            {
-                server.addScheduledTask(() -> sendResults(sender, results, NameOfTheEntity));
-            }
-        }, 6400);
+        sendResults(sender, results, NameOfTheEntity);
 
         return results.size();
     }

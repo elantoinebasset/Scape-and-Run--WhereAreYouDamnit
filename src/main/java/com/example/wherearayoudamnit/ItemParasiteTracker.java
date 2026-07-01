@@ -32,7 +32,7 @@ public class ItemParasiteTracker extends Item
         this.setCreativeTab(CreativeTabs.TOOLS);
         this.setMaxStackSize(1);
 
-        // Propriété pour l'état (idle/searching/found)
+        // Property of the tracker (idle/searching/found)
         this.addPropertyOverride(TRACKER_STATE, new IItemPropertyGetter()
         {
             @Override
@@ -47,7 +47,7 @@ public class ItemParasiteTracker extends Item
             }
         });
 
-        // Propriété pour la frame courante
+        // Property for the current frame
         ResourceLocation ANIMATION_FRAME = new ResourceLocation("wherearayoudamnit", "animation_frame");
         this.addPropertyOverride(ANIMATION_FRAME, new IItemPropertyGetter()
         {
@@ -69,49 +69,112 @@ public class ItemParasiteTracker extends Item
     {
         ItemStack heldItem = player.getHeldItem(hand);
 
+        if (player.getCooldownTracker().hasCooldown(this)) return new ActionResult<>(EnumActionResult.PASS, heldItem);
+
         if (!world.isRemote)
         {
-            setTrackerState(heldItem, 1);
+            player.getCooldownTracker().setCooldown(this, 600);
 
-            final ItemStack finalItem = heldItem;
-            final EntityPlayer finalPlayer = player;
-            final String finalType = trackerType;
-
-            java.util.Timer timer = new java.util.Timer();
-
-            // launch the search after 5 seconds
-            timer.schedule(new java.util.TimerTask()
+            if ("dispatcher".equals(trackerType))
             {
-                @Override
-                public void run()
-                {
-                    CommandFindParasite command = new CommandFindParasite();
-                    int nombreTrouve = command.executeAndCount(finalPlayer.getServer(), finalPlayer, new String[]{finalType});
-
-                    if (nombreTrouve > 0)
-                    {
-                        setTrackerState(finalItem, 2);
-
-                        timer.schedule(new java.util.TimerTask()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                setTrackerState(finalItem, 0);
-                                timer.cancel();
-                            }
-                        }, 6400);
-                    }
-                    else
-                    {
-                        setTrackerState(finalItem, 0);
-                        timer.cancel();
-                    }
-                }
-            }, 2400);
+                handleDispatcherSearch(heldItem, player);
+            }
+            if ("beckon".equals(trackerType))
+            {
+                handleBeckonSearch(heldItem, player);
+            }
         }
 
         return new ActionResult<>(EnumActionResult.SUCCESS, heldItem);
+    }
+
+    //Beckon
+    private void handleBeckonSearch(ItemStack heldItem, EntityPlayer player)
+    {
+        setTrackerState(heldItem, 1);
+
+        final ItemStack finalItem = heldItem;
+        final EntityPlayer finalPlayer = player;
+        final String finalType = trackerType;
+
+        java.util.Timer timer = new java.util.Timer();
+
+        timer.schedule(new java.util.TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                CommandFindParasite command = new CommandFindParasite();
+                int nombreTrouve = command.countOnly(finalPlayer.getServer(), finalPlayer, new String[]{finalType});
+
+                if (nombreTrouve > 0)
+                {
+                    setTrackerState(finalItem, 2);
+
+                    timer.schedule(new java.util.TimerTask()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            CommandFindParasite command = new CommandFindParasite();
+                            command.executeAndCount(finalPlayer.getServer(), finalPlayer, new String[]{finalType});
+                            setTrackerState(finalItem, 0);
+                            timer.cancel();
+                        }
+                    }, 6400);
+                }
+                else
+                {
+                    setTrackerState(finalItem, 0);
+                    timer.cancel();
+                }
+            }
+        }, 2400);
+    }
+
+
+    //Dispatcher
+    private void handleDispatcherSearch(ItemStack heldItem, EntityPlayer player)
+    {
+        setTrackerState(heldItem, 1);
+
+        final ItemStack finalItem = heldItem;
+        final EntityPlayer finalPlayer = player;
+        final String finalType = trackerType;
+
+        java.util.Timer timer = new java.util.Timer();
+
+        timer.schedule(new java.util.TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                CommandFindParasite command = new CommandFindParasite();
+                int nombreTrouve = command.countOnly(finalPlayer.getServer(), finalPlayer, new String[]{finalType});
+
+                if (nombreTrouve > 0)
+                {
+                    setTrackerState(finalItem, 2);
+
+                    timer.schedule(new java.util.TimerTask()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            CommandFindParasite command = new CommandFindParasite();
+                            command.executeAndCount(finalPlayer.getServer(), finalPlayer, new String[]{finalType});
+                            setTrackerState(finalItem, 0);
+                            timer.cancel();
+                        }
+                    }, 9000);
+                }
+                else
+                {
+                    setTrackerState(finalItem, 0);
+                    timer.cancel();
+                }
+            }
+        }, 5400);
     }
 
     public static void setTrackerState(ItemStack stack, int state)

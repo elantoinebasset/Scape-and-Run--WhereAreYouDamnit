@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " L ",
+        "BcB",
+        " M "
+    ],
+    "key": {
+        "L": {
+            "item": "srparasites:lurecomponent2"
+        },
+        "B": {
+            "item": "srparasites:beckon_drop"
+        },
+        "c": {
+            "item": "minecraft:compass"
+        },
+        "M": {
+            "item": "srparasites:module_base"
+        }
+    },
+    "result": {
+        "item": "wherearayoudamnit:beckon_tracker",
+        "count": 1
+    }
+}

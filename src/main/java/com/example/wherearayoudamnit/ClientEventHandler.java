@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @EventBusSubscriber(value = Side.CLIENT, modid = WhereAreYouDamnit.MODID)
 public class ClientEventHandler
 {
-    // Tick counter pour savoir depuis combien de ticks l'animation tourne
     private static int animationTick = 0;
     private static int lastState = 0;
 
@@ -27,42 +26,99 @@ public class ClientEventHandler
         if (mc.player == null) return;
 
         EntityPlayer player = mc.player;
-        ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
 
-        if (heldItem.isEmpty() || !(heldItem.getItem() instanceof ItemParasiteTracker)) 
+        // Look for the tracker item in the player's inventory or hands
+        ItemStack trackerItem = getTrackerFromHandOrInventory(player);
+
+        if (trackerItem == null)
         {
             animationTick = 0;
             lastState = 0;
             return;
         }
 
-        if (!heldItem.hasTagCompound()) return;
+        if (!trackerItem.hasTagCompound()) return;
 
-        int currentState = heldItem.getTagCompound().getInteger("tracker_state");
+        int currentState = trackerItem.getTagCompound().getInteger("tracker_state");
 
+        // Reset animationTick if the state has changed
         if (currentState != lastState)
         {
             animationTick = 0;
             lastState = currentState;
         }
 
-        if (currentState == 1)
+        String itemName = trackerItem.getItem().getRegistryName() != null
+                ? trackerItem.getItem().getRegistryName().getResourcePath()
+                : "";
+
+        if ("dispatcher_tracker".equals(itemName))
         {
-            int frameCount = 24;
-            int frame = (animationTick / 2) % frameCount;
-            heldItem.getTagCompound().setInteger("animation_frame", frame);
+            if (currentState == 1)
+            {
+                int frame = (animationTick / 2) % 57;
+                trackerItem.getTagCompound().setInteger("animation_frame", frame);
+            }
+            else if (currentState == 2)
+            {
+                int frame = (animationTick / 4) % 47;
+                trackerItem.getTagCompound().setInteger("animation_frame", frame);
+            }
+            else
+            {
+                trackerItem.getTagCompound().setInteger("animation_frame", 0);
+            }
         }
-        else if (currentState == 2)
+
+        if ("beckon_tracker".equals(itemName))
         {
-            int frameCount = 31;
-            int frame = (animationTick / 4) % frameCount;
-            heldItem.getTagCompound().setInteger("animation_frame", frame);
-        }
-        else
-        {
-            heldItem.getTagCompound().setInteger("animation_frame", 0);
+            if (currentState == 1)
+            {
+                int frame = (animationTick / 2) % 24;
+                trackerItem.getTagCompound().setInteger("animation_frame", frame);
+            }
+            else if (currentState == 2)
+            {
+                int frame = (animationTick / 4) % 31;
+                trackerItem.getTagCompound().setInteger("animation_frame", frame);
+            }
+            else
+            {
+                trackerItem.getTagCompound().setInteger("animation_frame", 0);
+            }
         }
 
         animationTick++;
+    }
+
+    private static ItemStack getTrackerFromHandOrInventory(EntityPlayer player)
+    {
+        // Look FOR the tracker item in the player's inventory or hands
+        for (ItemStack stack : player.inventory.mainInventory)
+        {
+            if (!stack.isEmpty() && stack.getItem() instanceof ItemParasiteTracker)
+            {
+                if (stack.hasTagCompound() && stack.getTagCompound().getInteger("tracker_state") != 0)
+                {
+                    return stack;
+                }
+            }
+        }
+
+        // If not, this will return the item in the main hand (even if state = 0)
+        ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
+        if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemParasiteTracker)
+        {
+            return heldItem;
+        }
+
+        // Check the off-hand (in case)
+        ItemStack offhandItem = player.getHeldItem(EnumHand.OFF_HAND);
+        if (!offhandItem.isEmpty() && offhandItem.getItem() instanceof ItemParasiteTracker)
+        {
+            return offhandItem;
+        }
+
+        return null;
     }
 }

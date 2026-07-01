@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " L ",
+        "DED",
+        " M "
+    ],
+    "key": {
+        "L": {
+            "item": "srparasites:lurecomponent2"
+        },
+        "D": {
+            "item": "srparasites:dispatcher_drop"
+        },
+        "E": {
+            "item": "srparasites:evclock"
+        },
+        "M": {
+            "item": "srparasites:module_base"
+        }
+    },
+    "result": {
+        "item": "wherearayoudamnit:dispatcher_tracker",
+        "count": 1
+    }
+}

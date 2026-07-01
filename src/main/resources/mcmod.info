@@ -1,15 +1,15 @@
 [
 {
   "modid": "examplemod",
-  "name": "Example Mod",
+  "name": "Scape and Run: whereAreyoudamnit",
   "description": "Example placeholder mod.",
-  "version": "${version}",
+  "version": "${1.2}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
-  "logoFile": "",
+  "authorList": ["DevElAntoineB"],
+  "credits": "DevElAntoineB",
+  "logoFile": "There will be my logo dw",
   "screenshots": [],
   "dependencies": []
 }

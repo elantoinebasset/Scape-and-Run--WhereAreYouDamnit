@@ -15,6 +15,11 @@ public class ModItems
         BECKON_TRACKER = new ItemParasiteTracker(WhereAreYouDamnit.MODID, "beckon_tracker", "beckon");
         ForgeRegistries.ITEMS.register(BECKON_TRACKER);
 
+        registerDispatcherTracker();
+    }
+
+    private static void registerDispatcherTracker()
+    {
         // Item to find the Dispatchers
         DISPATCHER_TRACKER = new ItemParasiteTracker(WhereAreYouDamnit.MODID, "dispatcher_tracker", "dispatcher");
         ForgeRegistries.ITEMS.register(DISPATCHER_TRACKER);
