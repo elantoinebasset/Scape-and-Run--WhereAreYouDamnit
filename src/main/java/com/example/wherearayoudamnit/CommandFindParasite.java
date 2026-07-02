@@ -29,6 +29,13 @@ public class CommandFindParasite extends CommandBase
         "srparasites:dispatcher_siv"
     );
 
+    private static final List<String> IDS_ROOTERS = Arrays.asList(
+        "srparasites:rooter_si",
+        "srparasites:rooter_sii",
+        "srparasites:rooter_siii",
+        "srparasites:rooter_siv"
+    );
+
     @Override
     public String getName()
     {
@@ -38,7 +45,7 @@ public class CommandFindParasite extends CommandBase
     @Override
     public String getUsage(ICommandSender sender)
     {
-        return "/findparasite <beckon|dispatcher> - Show coordinates of the entity that you are looking for";
+        return "/findparasite <beckon|dispatcher|rooter> - Show coordinates of the entity that you are looking for";
     }
 
     @Override
@@ -59,8 +66,10 @@ public class CommandFindParasite extends CommandBase
 
         if (argument.equals("beckon"))
             IdsToSearch = IDS_BECKONS;
-        else if (argument.equals("dispatcher"))
+        if (argument.equals("dispatcher"))
             IdsToSearch = IDS_DISPATCHERS;
+        if (argument.equals("rooter"))
+            IdsToSearch = IDS_ROOTERS;
         else
             return 0;
 
@@ -89,7 +98,7 @@ public class CommandFindParasite extends CommandBase
     {
         if (args.length == 0)
         {
-            sender.sendMessage(new TextComponentString("\u00A7cUsage : /findparasite <beckon|dispatcher>"));
+            sender.sendMessage(new TextComponentString("\u00A7cUsage : /findparasite <beckon|dispatcher|rooter>"));
             return 0;
         }
 
@@ -102,14 +111,19 @@ public class CommandFindParasite extends CommandBase
             IdsToSearch = IDS_BECKONS;
             NameOfTheEntity = "Beckon";
         }
-        else if (argument.equals("dispatcher"))
+        if (argument.equals("dispatcher"))
         {
             IdsToSearch = IDS_DISPATCHERS;
             NameOfTheEntity = "Dispatcher";
         }
+        if (argument.equals("rooter"))
+        {
+            IdsToSearch = IDS_ROOTERS;
+            NameOfTheEntity = "Rooter";
+        }
         else
         {
-            sender.sendMessage(new TextComponentString("\u00A7cUnknown argument : " + argument + ". Use beckon or dispatcher. Thank you :D"));
+            sender.sendMessage(new TextComponentString("\u00A7cUnknown argument : " + argument + ". Use beckon, dispatcher, or rooter. Thank you :D"));
             return 0;
         }
 
