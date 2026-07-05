@@ -1,21 +1,23 @@
 $root = Split-Path -Parent $PSScriptRoot
-$baseDir = Join-Path $root 'src/main/resources/assets/wherearayoudamnit/models/item'
+$modelsBaseDir = Join-Path $root 'src/main/resources/assets/wherearayoudamnit/models/item'
 
 $sets = @(
-    @{ Name = 'searching'; Count = 24 },
-    @{ Name = 'found'; Count = 31 }
+    @{ Name = 'searching'; Count = 26; TextureFolder = 'rooter_tracker_searching'; ModelFolder = 'rooter_tracker_searchingfile' },
+    @{ Name = 'found'; Count = 56; TextureFolder = 'rooter_tracker_found'; ModelFolder = 'rooter_tracker_foundfile' }
 )
 
 foreach ($set in $sets) {
-    $outDir = Join-Path $baseDir $set.Name
+    $outDir = Join-Path $modelsBaseDir $set.Name
+    $outDir = Join-Path $outDir $set.ModelFolder
     New-Item -ItemType Directory -Path $outDir -Force | Out-Null
 
     for ($i = 0; $i -lt $set.Count; $i++) {
+        $texturePath = "wherearayoudamnit:$($set.Name)/$($set.TextureFolder)/$($set.TextureFolder)_$i"
         $content = @"
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "wherearayoudamnit:$($set.Name)/beckon_tracker_$($set.Name)_$i"
+        "layer0": "$texturePath"
     },
     "display": {
         "thirdperson_righthand": {
@@ -37,7 +39,7 @@ foreach ($set in $sets) {
 }
 "@
 
-        $filePath = Join-Path $outDir "beckon_tracker_$($set.Name)_$i.json"
+        $filePath = Join-Path $outDir "$($set.ModelFolder)_$i.json"
         Set-Content -Path $filePath -Value $content -Encoding utf8
         Write-Host "Created $filePath"
     }

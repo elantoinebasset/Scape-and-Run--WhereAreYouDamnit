@@ -8,6 +8,7 @@ public class ModItems
 {
     public static Item BECKON_TRACKER;
     public static Item DISPATCHER_TRACKER;
+    public static Item ROOTER_TRACKER;
 
     public static void register()
     {
@@ -16,6 +17,7 @@ public class ModItems
         ForgeRegistries.ITEMS.register(BECKON_TRACKER);
 
         registerDispatcherTracker();
+        registerRooterTracker();
     }
 
     private static void registerDispatcherTracker()
@@ -23,5 +25,12 @@ public class ModItems
         // Item to find the Dispatchers
         DISPATCHER_TRACKER = new ItemParasiteTracker(WhereAreYouDamnit.MODID, "dispatcher_tracker", "dispatcher");
         ForgeRegistries.ITEMS.register(DISPATCHER_TRACKER);
+    }
+
+    public static void registerRooterTracker()
+    {
+        // Item to find the Rooters
+        ROOTER_TRACKER = new ItemParasiteTracker(WhereAreYouDamnit.MODID, "rooter_tracker", "rooter");
+        ForgeRegistries.ITEMS.register(ROOTER_TRACKER);
     }
 }

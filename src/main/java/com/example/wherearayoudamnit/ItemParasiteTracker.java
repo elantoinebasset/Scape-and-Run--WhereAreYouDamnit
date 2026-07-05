@@ -83,6 +83,10 @@ public class ItemParasiteTracker extends Item
             {
                 handleBeckonSearch(heldItem, player);
             }
+            if ("rooter".equals(trackerType))
+            {
+                handleRooterSearch(heldItem, player);
+            }
         }
 
         return new ActionResult<>(EnumActionResult.SUCCESS, heldItem);
@@ -175,6 +179,50 @@ public class ItemParasiteTracker extends Item
                 }
             }
         }, 5400);
+    }
+
+    //Rooter
+    private void handleRooterSearch(ItemStack heldItem, EntityPlayer player)
+    {
+        setTrackerState(heldItem, 1);
+
+        final ItemStack finalItem = heldItem;
+        final EntityPlayer finalPlayer = player;
+        final String finalType = trackerType;
+
+        java.util.Timer timer = new java.util.Timer();
+
+        timer.schedule(new java.util.TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                CommandFindParasite command = new CommandFindParasite();
+                int nombreTrouve = command.countOnly(finalPlayer.getServer(), finalPlayer, new String[]{finalType});
+
+                if (nombreTrouve > 0)
+                {
+                    setTrackerState(finalItem, 2);
+
+                    timer.schedule(new java.util.TimerTask()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            CommandFindParasite command = new CommandFindParasite();
+                            command.executeAndCount(finalPlayer.getServer(), finalPlayer, new String[]{finalType});
+                            setTrackerState(finalItem, 0);
+                            timer.cancel();
+                        }
+                    }, 5600);
+                }
+                else
+                {
+                    setTrackerState(finalItem, 0);
+                    timer.cancel();
+                }
+            }
+        }, 2600);
     }
 
     public static void setTrackerState(ItemStack stack, int state)

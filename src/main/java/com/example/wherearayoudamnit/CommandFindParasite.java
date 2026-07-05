@@ -66,9 +66,9 @@ public class CommandFindParasite extends CommandBase
 
         if (argument.equals("beckon"))
             IdsToSearch = IDS_BECKONS;
-        if (argument.equals("dispatcher"))
+        else if (argument.equals("dispatcher"))
             IdsToSearch = IDS_DISPATCHERS;
-        if (argument.equals("rooter"))
+        else if (argument.equals("rooter"))
             IdsToSearch = IDS_ROOTERS;
         else
             return 0;
@@ -111,12 +111,12 @@ public class CommandFindParasite extends CommandBase
             IdsToSearch = IDS_BECKONS;
             NameOfTheEntity = "Beckon";
         }
-        if (argument.equals("dispatcher"))
+        else if (argument.equals("dispatcher"))
         {
             IdsToSearch = IDS_DISPATCHERS;
             NameOfTheEntity = "Dispatcher";
         }
-        if (argument.equals("rooter"))
+        else if (argument.equals("rooter"))
         {
             IdsToSearch = IDS_ROOTERS;
             NameOfTheEntity = "Rooter";

@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " L ",
+        "BcR",
+        " M "
+    ],
+    "key": {
+        "L": {
+            "item": "srparasites:lurecomponent2"
+        },
+        "B": {
+            "item": "srparasites:beckon_drop"
+        },
+        "c": {
+            "item": "srparasites:pearl"
+        },
+        "R": {
+            "item": "srparasites:dispatcher_drop"
+        },
+        "M": {
+            "item": "srparasites:module_base"
+        }
+    },
+    "result": {
+        "item": "wherearayoudamnit:rooter_tracker",
+        "count": 1
+    }
+}

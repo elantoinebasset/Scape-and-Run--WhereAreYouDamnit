@@ -10,11 +10,20 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @EventBusSubscriber(value = Side.CLIENT, modid = WhereAreYouDamnit.MODID)
 public class ClientEventHandler
 {
-    private static int animationTick = 0;
-    private static int lastState = 0;
+    // IMPORTANT : chaque ItemStack a maintenant SON PROPRE compteur d'animation
+    // et SON PROPRE dernier state, au lieu d'une seule variable globale partagee
+    // entre tous les trackers. C'est ca qui causait le bug ou un tracker "gelait"
+    // quand l'autre etait actif.
+    private static final Map<ItemStack, Integer> animationTicks = new HashMap<>();
+    private static final Map<ItemStack, Integer> lastStates = new HashMap<>();
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
@@ -27,98 +36,126 @@ public class ClientEventHandler
 
         EntityPlayer player = mc.player;
 
-        // Look for the tracker item in the player's inventory or hands
-        ItemStack trackerItem = getTrackerFromHandOrInventory(player);
+        List<ItemStack> activeTrackers = getAllActiveTrackers(player);
 
-        if (trackerItem == null)
+        if (activeTrackers.isEmpty())
         {
-            animationTick = 0;
-            lastState = 0;
+            animationTicks.clear();
+            lastStates.clear();
             return;
         }
 
-        if (!trackerItem.hasTagCompound()) return;
-
-        int currentState = trackerItem.getTagCompound().getInteger("tracker_state");
-
-        // Reset animationTick if the state has changed
-        if (currentState != lastState)
+        for (ItemStack trackerItem : activeTrackers)
         {
-            animationTick = 0;
-            lastState = currentState;
+            if (!trackerItem.hasTagCompound()) continue;
+
+            int currentState = trackerItem.getTagCompound().getInteger("tracker_state");
+            Integer lastState = lastStates.get(trackerItem);
+            int tick = animationTicks.getOrDefault(trackerItem, 0);
+
+            // Reset le compteur d'animation seulement si CE TRACKER a change de state
+            if (lastState == null || currentState != lastState)
+            {
+                tick = 0;
+                lastStates.put(trackerItem, currentState);
+            }
+
+            String itemName = trackerItem.getItem().getRegistryName() != null
+                    ? trackerItem.getItem().getRegistryName().getResourcePath()
+                    : "";
+
+            if ("dispatcher_tracker".equals(itemName))
+            {
+                if (currentState == 1)
+                {
+                    int frame = (tick / 2) % 57;
+                    trackerItem.getTagCompound().setInteger("animation_frame", frame);
+                }
+                else if (currentState == 2)
+                {
+                    int frame = (tick / 4) % 47;
+                    trackerItem.getTagCompound().setInteger("animation_frame", frame);
+                }
+                else
+                {
+                    trackerItem.getTagCompound().setInteger("animation_frame", 0);
+                }
+            }
+
+            if ("beckon_tracker".equals(itemName))
+            {
+                if (currentState == 1)
+                {
+                    int frame = (tick / 2) % 24;
+                    trackerItem.getTagCompound().setInteger("animation_frame", frame);
+                }
+                else if (currentState == 2)
+                {
+                    int frame = (tick / 4) % 31;
+                    trackerItem.getTagCompound().setInteger("animation_frame", frame);
+                }
+                else
+                {
+                    trackerItem.getTagCompound().setInteger("animation_frame", 0);
+                }
+            }
+
+            if ("rooter_tracker".equals(itemName))
+            {
+                if (currentState == 1)
+                {
+                    int frame = (tick / 2) % 26;
+                    trackerItem.getTagCompound().setInteger("animation_frame", frame);
+                }
+                else if (currentState == 2)
+                {
+                    int frame = (tick / 2) % 56;
+                    trackerItem.getTagCompound().setInteger("animation_frame", frame);
+                }
+                else
+                {
+                    trackerItem.getTagCompound().setInteger("animation_frame", 0);
+                }
+            }
+
+            animationTicks.put(trackerItem, tick + 1);
         }
 
-        String itemName = trackerItem.getItem().getRegistryName() != null
-                ? trackerItem.getItem().getRegistryName().getResourcePath()
-                : "";
-
-        if ("dispatcher_tracker".equals(itemName))
-        {
-            if (currentState == 1)
-            {
-                int frame = (animationTick / 2) % 57;
-                trackerItem.getTagCompound().setInteger("animation_frame", frame);
-            }
-            else if (currentState == 2)
-            {
-                int frame = (animationTick / 4) % 47;
-                trackerItem.getTagCompound().setInteger("animation_frame", frame);
-            }
-            else
-            {
-                trackerItem.getTagCompound().setInteger("animation_frame", 0);
-            }
-        }
-
-        if ("beckon_tracker".equals(itemName))
-        {
-            if (currentState == 1)
-            {
-                int frame = (animationTick / 2) % 24;
-                trackerItem.getTagCompound().setInteger("animation_frame", frame);
-            }
-            else if (currentState == 2)
-            {
-                int frame = (animationTick / 4) % 31;
-                trackerItem.getTagCompound().setInteger("animation_frame", frame);
-            }
-            else
-            {
-                trackerItem.getTagCompound().setInteger("animation_frame", 0);
-            }
-        }
-
-        animationTick++;
+        // Nettoyage : on retire les entrees des trackers qui ne sont plus actifs
+        // pour eviter que les Maps grossissent indefiniment
+        animationTicks.keySet().removeIf(stack -> !activeTrackers.contains(stack));
+        lastStates.keySet().removeIf(stack -> !activeTrackers.contains(stack));
     }
 
-    private static ItemStack getTrackerFromHandOrInventory(EntityPlayer player)
+    // Retourne TOUS les trackers (main hand, off-hand, inventaire) qui ont
+    // un tracker_state different de 0, c'est a dire en cours d'animation.
+    private static List<ItemStack> getAllActiveTrackers(EntityPlayer player)
     {
-        // Look FOR the tracker item in the player's inventory or hands
+        List<ItemStack> found = new ArrayList<>();
+
+        ItemStack mainHand = player.getHeldItem(EnumHand.MAIN_HAND);
+        if (!mainHand.isEmpty() && mainHand.getItem() instanceof ItemParasiteTracker)
+        {
+            found.add(mainHand);
+        }
+
+        ItemStack offHand = player.getHeldItem(EnumHand.OFF_HAND);
+        if (!offHand.isEmpty() && offHand.getItem() instanceof ItemParasiteTracker && !found.contains(offHand))
+        {
+            found.add(offHand);
+        }
+
         for (ItemStack stack : player.inventory.mainInventory)
         {
-            if (!stack.isEmpty() && stack.getItem() instanceof ItemParasiteTracker)
+            if (!stack.isEmpty() && stack.getItem() instanceof ItemParasiteTracker && !found.contains(stack))
             {
                 if (stack.hasTagCompound() && stack.getTagCompound().getInteger("tracker_state") != 0)
                 {
-                    return stack;
+                    found.add(stack);
                 }
             }
         }
 
-        // If not, this will return the item in the main hand (even if state = 0)
-        ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
-        if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemParasiteTracker)
-        {
-            return heldItem;
-        }
-
-        // Check the off-hand (in case)
-        ItemStack offhandItem = player.getHeldItem(EnumHand.OFF_HAND);
-        if (!offhandItem.isEmpty() && offhandItem.getItem() instanceof ItemParasiteTracker)
-        {
-            return offhandItem;
-        }
-
-        return null;
+        return found;
     }
 }

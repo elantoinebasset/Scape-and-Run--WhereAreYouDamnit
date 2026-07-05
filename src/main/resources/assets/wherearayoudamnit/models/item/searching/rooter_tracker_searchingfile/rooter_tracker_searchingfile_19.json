@@ -1,7 +1,7 @@
-{
+﻿{
     "parent": "item/handheld",
     "textures": {
-        "layer0": "wherearayoudamnit:items/dispatchertexture/dispatcher_tracker_idle"
+        "layer0": "wherearayoudamnit:searching/rooter_tracker_searching/rooter_tracker_searching_19"
     },
     "display": {
         "thirdperson_righthand": {
